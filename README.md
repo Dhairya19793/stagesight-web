@@ -2,6 +2,10 @@
 
 **Practice your talk. See your delivery. Make the next rehearsal count.**
 
+### [Open StageSight live →](https://stagesight-web.onrender.com/)
+
+Deployed to Render over HTTPS on **November 14, 2026**, from this repository's `main` branch. Sign in or create an account to start practicing. The free instance may take time to wake after inactivity.
+
 StageSight is a presentation-practice web app built for an OpenAI-sponsored hackathon. Record a rehearsal with your laptop or phone camera, save it to your private account, and return to the recording with a transcript, content coaching, and optional visual overlays.
 
 This repository contains the rebuilt website. It is separate from the earlier `stagesight-coach` prototype. This is a working development build, not a fully validated production release; see [Verification and remaining work](#verification-and-remaining-work).
@@ -118,6 +122,8 @@ render.yaml                  Render Web Service configuration
 
 ## Deploy on Render
 
+The current deployment is **https://stagesight-web.onrender.com/**. Supabase's Auth Site URL and allowed redirect entry are configured for that origin. The OpenAI key is configured privately in Render, not committed here. Instructions below describe reproducing the deployment.
+
 Use this private repository as a **Node Web Service**, not a Static Site.
 
 1. Connect this repository to a new Render Web Service.
@@ -141,10 +147,13 @@ Verified during development:
 - OpenAI Responses API success and transcription success using synthetic speech, without a personal recording.
 - MediaPipe face/object model initialization in the browser with camera and microphone off.
 - Five mocked backend tests covering anonymous access, ownership rejection, missing credentials, bounded media size, and a successful processing flow.
+- Render reported a successful live deployment of commit `0e36c4e`; the deployed homepage and sign-in form were opened over HTTPS.
+- Deployed health endpoint returned `200`, AI configuration reported `configured: true`, MediaPipe JS/WASM assets were served, unauthenticated analysis requests returned `401`, and the private environment-file URL returned `404`.
+- Supabase's Auth Site URL and redirect entry were saved as `https://stagesight-web.onrender.com/`.
 
 **Not yet verified end to end:** a real camera recording through cloud upload, video replay, saved visual-overlay alignment, private AI-report persistence, full deletion, mobile recording, cross-device replay, and two-account isolation. Permission-denied, device-in-use, slow-network, expired-session, and oversized-file scenarios also need hands-on testing.
 
-Not implemented: OpenAI Realtime coaching, password recovery UI, MFA, head-direction estimates, movement-based coaching, audio-energy graphs, pause/speaking-time measurement, background transcoding, or scheduled retention cleanup. Public deployment is pending.
+Not implemented: OpenAI Realtime coaching, password recovery UI, MFA, head-direction estimates, movement-based coaching, audio-energy graphs, pause/speaking-time measurement, background transcoding, or scheduled retention cleanup. Deployment is live; those feature and end-to-end testing gaps remain.
 
 ## Development checks
 
