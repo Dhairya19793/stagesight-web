@@ -124,7 +124,7 @@ render.yaml                  Render Web Service configuration
 
 The current deployment is **https://stagesight-web.onrender.com/**. Supabase's Auth Site URL and allowed redirect entry are configured for that origin. The OpenAI key is configured privately in Render, not committed here. Instructions below describe reproducing the deployment.
 
-Use this private repository as a **Node Web Service**, not a Static Site.
+Use this repository as a **Node Web Service**, not a Static Site.
 
 1. Connect this repository to a new Render Web Service.
 2. Choose Node 22 and the appropriate instance plan.

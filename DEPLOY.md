@@ -13,7 +13,7 @@ Verified at deployment: HTTPS homepage and sign-in UI, `/api/health` returning `
 
 ## Reproduce or update
 
-Deploy this directory as the root of a private GitHub repository. Exclude .env.local and all other real secret files; .gitignore is included. Keep the MediaPipe models and WASM in dist/vendor, because they are served locally.
+Deploy this directory as the root of a GitHub repository. Exclude .env.local and all other real secret files regardless of repository visibility; .gitignore is included. Keep the MediaPipe models and WASM in dist/vendor, because they are served locally.
 
 Create a Render **Web Service**, not a Static Site. Select Node, Free instance, build command `npm run check`, start command `npm start`, health path `/api/health`. Set `HOST=0.0.0.0` and `OPENAI_API_KEY` in Render's private environment settings. Optional model settings are listed in .env.example. Render provides PORT. Node 22 is declared in package.json. render.yaml contains the same configuration for Blueprint deployment.
 
