@@ -10,20 +10,22 @@ async function deleteOwnedCloudSession(session){
 }
 function requestSessionDeletion(id){
  const session=sessions.find(s=>s.id===id);if(!session)return;
- modal('<h2>Delete this recording?</h2><p><strong>'+esc(session.title)+'</strong></p><p>This permanently removes the video, saved transcript, AI report, visual data, and session record. Downloaded copies remain on your device.</p><p id="delete-status" role="status"></p><div class="actions"><button class="secondary" id="cancel-session-delete">Keep recording</button><button class="danger" id="confirm-session-delete">Delete permanently</button></div>');
- const dialog=$('#dialog'),confirm=$('#confirm-session-delete'),cancel=$('#cancel-session-delete'),status=$('#delete-status'),close=$('.close');
+ modal('<h2>Delete this recording?</h2><p><strong>'+esc(session.title)+'</strong></p><p>This permanently removes the video, saved transcript, AI report, visual data, and session record. Downloaded copies remain on your device.</p><label class="field" for="delete-verification">Type DELETE to enable permanent deletion</label><input type="text" id="delete-verification" autocomplete="off" spellcheck="false"><p id="delete-status" role="status"></p><div class="actions"><button type="button" class="secondary" id="cancel-session-delete">Keep recording</button><button type="button" class="danger" id="confirm-session-delete" disabled>Delete permanently</button></div>');
+ const dialog=$('#dialog'),confirm=$('#confirm-session-delete'),cancel=$('#cancel-session-delete'),status=$('#delete-status'),close=$('.close'),verification=$('#delete-verification');
  let busy=false;
  const preventBusyClose=e=>{if(busy)e.preventDefault()};dialog.addEventListener('cancel',preventBusyClose);
  dialog.addEventListener('close',()=>dialog.removeEventListener('cancel',preventBusyClose),{once:true});
  cancel.onclick=()=>dialog.close();
+ verification.oninput=()=>{confirm.disabled=verification.value!=='DELETE'};
  confirm.onclick=async()=>{
+  if(busy||verification.value!=='DELETE')return;
   busy=true;confirm.disabled=cancel.disabled=close.disabled=true;confirm.textContent='Deleting…';status.textContent='Removing the recording and associated data…';
   try{
    if(session.cloud)await deleteOwnedCloudSession(session);
    else await new Promise((resolve,reject)=>{if(!db){reject(Error('Device storage unavailable.'));return}const tx=db.transaction('sessions','readwrite');tx.objectStore('sessions').delete(id);tx.oncomplete=resolve;tx.onerror=()=>reject(Error('Device deletion failed.'));tx.onabort=()=>reject(Error('Device deletion interrupted.'))});
    sessions=sessions.filter(s=>s.id!==id);dialog.close();render('library');toast('Recording and associated data deleted.');if(session.cloud)await refresh();
   }catch(error){status.textContent='Deletion incomplete. '+error.message+' Keep this page open and retry.';confirm.textContent='Retry deletion';}
-  finally{busy=false;confirm.disabled=cancel.disabled=close.disabled=false;}
+  finally{busy=false;confirm.disabled=verification.value!=='DELETE';cancel.disabled=close.disabled=false;}
  };
 }
 const cardBeforeSessionActions=card;
