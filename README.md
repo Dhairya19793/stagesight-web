@@ -18,6 +18,7 @@ This repository contains the rebuilt website. It is separate from the earlier `s
 - **Transcription:** optional browser speech recognition during rehearsal; OpenAI transcription after saving, with separate consent.
 - **Visual tools:** optional MediaPipe face landmarks and common-object boxes processed on your device.
 - **Private recordings:** Supabase accounts, private video storage, owner-scoped metadata, short-lived playback links, downloads, and deletion.
+- **Manage sessions:** delete a recording directly from My sessions after confirmation, including its saved AI report, visual data, and metadata. Interrupted deletion can be retried.
 - **Coaching:** an OpenAI-generated summary, content/structure strengths, specific improvements, and a next-practice exercise. Reports explain the limits of the available evidence.
 - **Replay:** code for synchronized saved detection overlays, seeking, and timestamped framing-review moments drawn from collected samples.
 
