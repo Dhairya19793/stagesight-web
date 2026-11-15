@@ -12,6 +12,7 @@ This repository contains the rebuilt website. It is separate from the earlier `s
 
 ## The experience
 
+- **Animated overview:** a full-width green sculpture, large typography, moving text band and stacked practice sections. Motion respects reduced-motion settings, with an explicit play/pause control.
 - **Overview:** your session library and practice totals, with a clear empty state before your first recording. Illustrative reports are tucked into a separate examples section.
 - **Practice studio:** explicit camera/microphone access, recording consent, camera preview, start/stop controls, and elapsed time.
 - **Transcription:** optional browser speech recognition during rehearsal; OpenAI transcription after saving, with separate consent.
