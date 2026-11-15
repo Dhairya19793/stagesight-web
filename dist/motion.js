@@ -1,4 +1,8 @@
 // Progressive visual enhancement only; recording, storage and auth stay independent.
+// Animated design is the default; the prior layout remains available for rollback.
+if(new URLSearchParams(location.search).get('design')!=='original'){
+ const concept=document.createElement('script');concept.src='scroll-concept.js';document.head.appendChild(concept);
+}
 (()=>{
  const root=document.querySelector('#content');if(!root)return;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');let queued=false;
