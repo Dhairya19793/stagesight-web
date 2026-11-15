@@ -2,18 +2,42 @@
 (()=>{
  const css=document.createElement('link');css.rel='stylesheet';css.href='scroll-concept.css';document.head.appendChild(css);
  const bold=document.createElement('link');bold.rel='stylesheet';bold.href='scroll-bold.css';document.head.appendChild(bold);
+ const experience=document.createElement('link');experience.rel='stylesheet';experience.href='experience.css';document.head.appendChild(experience);
  document.body.classList.add('scroll-concept');
  const root=document.querySelector('#content'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const motionToggle=document.createElement('button');motionToggle.className='concept-motion';motionToggle.textContent=reduced.matches?'▶ Play animations':'Ⅱ Pause animations';motionToggle.setAttribute('aria-pressed',String(!reduced.matches));document.body.appendChild(motionToggle);
  let motionOn=!reduced.matches;
- motionToggle.onclick=()=>{motionOn=!motionOn;document.body.classList.toggle('motion-demo',motionOn);document.body.classList.toggle('motion-paused',!motionOn);motionToggle.textContent=motionOn?'Ⅱ Pause animations':'▶ Play animations';motionToggle.setAttribute('aria-pressed',String(motionOn));update()};
+ motionToggle.onclick=()=>{motionOn=!motionOn;document.body.classList.toggle('motion-demo',motionOn);document.documentElement.classList.toggle('motion-demo',motionOn);document.body.classList.toggle('motion-paused',!motionOn);motionToggle.textContent=motionOn?'Ⅱ Pause animations':'▶ Play animations';motionToggle.setAttribute('aria-pressed',String(motionOn));update()};
  if(!motionOn)document.body.classList.add('motion-paused');
  const progress=document.createElement('div');progress.className='scroll-progress';progress.setAttribute('aria-hidden','true');document.body.appendChild(progress);
  let pending=false;
+ let lastPage='',forwarding=false;
+ // Wrap the existing navigation click, preserving its auth and recording guards.
+ document.addEventListener('click',event=>{
+  const button=event.target.closest('button[data-view]');
+  if(!button||forwarding||!motionOn||!document.startViewTransition)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  const order=['home','studio','library'],next=button.dataset.view;
+  root.style.setProperty('--page-direction',order.indexOf(next)<order.indexOf(lastPage)?'-1':'1');
+  document.startViewTransition(()=>{forwarding=true;try{button.click();enhance()}finally{forwarding=false}});
+ },true);
  const reveal=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting){entry.target.classList.add('is-visible');reveal.unobserve(entry.target)}},{threshold:.12});
  function enhance(){
   const hero=root.querySelector('.hero');
   document.body.classList.toggle('concept-home',Boolean(hero));
+  const page=hero?'home':root.querySelector('.studio-grid')?'studio':root.querySelector('.report-grid')?'report':'library';
+  document.body.dataset.chapter=page;
+  const heading=root.querySelector(':scope > .heading');
+  if(heading&&!heading.dataset.chapterReady&&(page==='studio'||page==='library')){
+   heading.dataset.chapterReady='true';heading.classList.add('chapter-head');
+   const title=heading.querySelector('h1');if(title)title.innerHTML=page==='studio'?'Make room<br><em>for your voice.</em>':'Every rehearsal.<br><em>A little further.</em>';
+   const number=document.createElement('span');number.className='chapter-number';number.setAttribute('aria-hidden','true');number.textContent=page==='studio'?'02':'03';heading.appendChild(number);
+  }
+  if(page!==lastPage){
+   lastPage=page;root.classList.remove('chapter-arrive');
+   if(motionOn){void root.offsetWidth;root.classList.add('chapter-arrive')}
+   window.scrollTo({top:0,behavior:'instant'});
+  }
   if(hero&&!hero.dataset.scrollConcept){
    hero.dataset.scrollConcept='true';
    hero.querySelector('h2').innerHTML='Own the<br><em>moment.</em>';
